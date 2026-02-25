@@ -59,8 +59,8 @@ class Courtois :
         elif horizontale == "Droite" :
             direction = 1
         #si le robot ne doit pas bouger mais je commente pour l'instant 
-        #esle :
-            #return 90
+        elif horizontale == "fixe" :
+            return 90
         if vertical == "Haut" :
             delta = direction * 45
         else :
@@ -76,3 +76,26 @@ class Courtois :
         else :
             return False
 
+import time
+
+class ConditionTimer:
+    def __init__(self):
+        self.start_time = None # On ne commence pas à compter tout de suite
+
+    def update(self, condition_is_false):
+        """
+        condition_is_false: On lui passe le résultat de ta fonction (True ou False)
+        """
+        if condition_is_false:
+            # Si c'est la première fois qu'on détecte le False, on démarre le chrono
+            if self.start_time is None:
+                self.start_time = time.time()
+            
+            # On vérifie si 2 secondes sont passées
+            if time.time() - self.start_time >= 2:
+                return True
+        else:
+            # Si la condition n'est plus False, on reset le chrono à zéro
+            self.start_time = None
+            
+        return False

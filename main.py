@@ -2,7 +2,8 @@ import cv2
 import cvzone
 from camera import RealSenseCamera
 from ball_tracker import WhiteBallTracker
-from pos_goal import Courtois
+from pos_goal import Courtois 
+from pos_goal import ConditionTimer
 from collections import deque
 
 def main():
@@ -13,6 +14,9 @@ def main():
     tracker = WhiteBallTracker(debug_mode=True) 
 
     goal=Courtois
+    mon_timer=ConditionTimer()
+    
+    
 
     #initialisation de la mémoire des position le tout a 0
     maxtaille=20
@@ -52,11 +56,15 @@ def main():
             mémoire_dir.append(rep)
             mémoire_haut.append(rep2)
             verif=Courtois.is_stable(mémoire_z)
+            reset=Courtois.zone_de_tir(distance_arrondie)
             #on calcule les valeur final uniquement dans la zone de tir
             if Courtois.zone_de_tir(distance_arrondie):
                 Hauteur_final=Courtois.stab_direction(mémoire_haut)
                 direction_final=Courtois.stab_direction(mémoire_dir)
                 print("debug")
+            elif mon_timer.update(reset):
+                angle=90
+            
             # Plus besoin de recalculer la distance ici, le tracker a déjà choisi le bon !
             angle = Courtois.prise_decision(direction_final,Hauteur_final)
             print(f"Cible verrouillée (Plus proche) -> X:{cx} Y:{cy}")
