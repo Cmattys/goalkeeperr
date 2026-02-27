@@ -2,7 +2,7 @@ import math
 
 class Courtois:
     #À quelle hauteur (en mètres) est placée l'objectif de ta caméra par rapport au sol ?
-    HAUTEUR_CAMERA = 0.48  
+    HAUTEUR_CAMERA = 0.60  
     
     # De combien de degrés la caméra penche-t-elle vers le sol ?
     ANGLE_TILT_DEG = 25    
@@ -47,3 +47,28 @@ class Courtois:
     def zone_de_tir(z_sol):
         """ Le robot s'active si la balle est à moins de 2.5m """
         return z_sol < 2.5
+    
+
+import time
+
+class ConditionTimer:
+    def __init__(self):
+        self.start_time = None # On ne commence pas à compter tout de suite
+
+    def update(self, condition_is_false):
+        """
+        condition_is_false: On lui passe le résultat de ta fonction (True ou False)
+        """
+        if condition_is_false:
+            # Si c'est la première fois qu'on détecte le False, on démarre le chrono
+            if self.start_time is None:
+                self.start_time = time.time()
+            
+            # On vérifie si 2 secondes sont passées
+            if time.time() - self.start_time >= 2:
+                return True
+        else:
+            # Si la condition n'est plus False, on reset le chrono à zéro
+            self.start_time = None
+            
+        return False
