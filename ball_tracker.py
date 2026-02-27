@@ -7,7 +7,7 @@ class WhiteBallTracker:
     def __init__(self, debug_mode=False):
         self.color_finder = ColorFinder(debug_mode)
         self.hsv_vals = {
-            'hmin': 0, 'smin': 0, 'vmin': 200, 
+            'hmin': 0, 'smin': 0, 'vmin': 190, 
             'hmax': 179, 'smax': 55, 'vmax': 255
         }
 

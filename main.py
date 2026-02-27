@@ -10,13 +10,14 @@ from pos_goal import ConditionTimer
 def main():
     # Démarrage de la caméra et du tracker
     cam = RealSenseCamera()
-    tracker = WhiteBallTracker(debug_mode=True)
+    tracker = WhiteBallTracker(debug_mode=False)
     
     arduino = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
     time.sleep(2)
 
     # --- AJOUT TIMER ---
     timer_hors_zone = ConditionTimer()
+    dernier_angle_envoye = None
     
     while True:
         img, depth_frame = cam.get_frame()
@@ -62,9 +63,12 @@ def main():
                     # La balle est trop loin, mais on attend encore
                     print(f"⏳ Balle en attente ({z_sol:.2f}m)... chrono en cours")
 
-                # 4. ENVOI SÉRIE (Seulement si on a calculé un angle à envoyer !)
+                # 4. ENVOI SÉRIE (Seulement si l'angle a changé !)
                 if angle_a_envoyer is not None and arduino is not None:
-                    arduino.write(f"{angle_a_envoyer}\n".encode('utf-8'))
+                    # On compare avec le dernier angle
+                    if angle_a_envoyer != dernier_angle_envoye:
+                        arduino.write(f"{angle_a_envoyer}\n".encode('utf-8'))
+                        dernier_angle_envoye = angle_a_envoyer  # On met en mémoire !
 
         # Affichage
         img_stacked = cvzone.stackImages([img_out, mask], 2, 0.5)

@@ -29,17 +29,17 @@ class Courtois:
     def calculer_angle_moteur(x_robot, y_robot):
         """
         Calcule l'angle de l'aiguille dans le plan Oxy (le but).
-        - 0° = Balle au sol à droite (le robot se couche à droite)
+        - 0° = Balle au sol à gauche (le robot se couche à gauche)
         - 90° = Balle en l'air au centre (le robot est debout)
-        - 180° = Balle au sol à gauche (le robot se couche à gauche)
+        - 180° = Balle au sol à droite (le robot se couche à droite)
         """
-        # atan2 gère parfaitement le plan Oxy (Y en premier, X en deuxième)
-        angle_rad = math.atan2(y_robot, x_robot)
+        # ASTUCE ICI : On met un signe MOINS devant x_robot pour inverser la gauche et la droite !
+        angle_rad = math.atan2(y_robot, -x_robot) 
         angle_deg = math.degrees(angle_rad)
         
         # Sécurité : Si la balle est "sous" le sol (erreur de capteur ou rebond bizarre)
         if angle_deg < 0:
-            angle_deg = 0 if x_robot > 0 else 180
+            angle_deg = 0 if (-x_robot) > 0 else 180
             
         return max(0, min(180, int(angle_deg)))
 
